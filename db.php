@@ -25,5 +25,13 @@
     function get_query(){
       return $this->query;
     }
+
+    function error(){
+      return $this->query->error;
+    }
+
+    function connect_error(){
+      return $this->database->connect_error;
+    }
   } 
 ?>

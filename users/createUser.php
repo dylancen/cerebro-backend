@@ -41,9 +41,9 @@
   $user->prepare_insert_query();
   $user->bind_insert_params($username, $pkey, $secq, $seca);
   if ($user->execute_insert()){
-    echo "Row added successfully\n";
+    send_ok_response("Row added successfully");
   }else{
-    send_error_response("Username already taken\n");
+    send_error_response($user_website->error());
   }
 
   function send_error_response($message){
