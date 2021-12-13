@@ -3,6 +3,7 @@
     protected $database;
     protected $query;
 
+    //hello world
     function __construct() {
       $this->database = new mysqli('localhost','root','password','project');
       if (!$this->database) {
