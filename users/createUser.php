@@ -43,20 +43,24 @@
   if ($user->execute_insert()){
     send_ok_response("Row added successfully");
   }else{
-    send_error_response($user_website->error());
+    send_error_response($user->error());
   }
 
   function send_error_response($message){
     http_response_code(400);
     header('Content-Type: application/json');
     header("Cache-Control: no-cache, must-revalidate");
-    echo json_encode(array('message' => $message)); 
+    $responseMap = array('message' => $message);
+    $responseMap['auth_token'] = generate_encoded_auth_token($responseMap);
+    echo json_encode($responseMap); 
   }
 
   function send_ok_response($message){
     http_response_code(200);
     header('Content-Type: application/json');
     header("Cache-Control: no-cache, must-revalidate");
-    echo json_encode(array('message' => $message)); 
+    $responseMap = array('message' => $message);
+    $responseMap['auth_token'] = generate_encoded_auth_token($responseMap);
+    echo json_encode($responseMap); 
   }
 ?>

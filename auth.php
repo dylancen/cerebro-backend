@@ -8,6 +8,7 @@
         $string = $string.$value;
       }
     }
+    //echo "PHP token: $string\n";
     $signature = sign_auth_token($string);//binary signature
     $url_sig_string = urlencode(base64_encode($signature));//converting to url
     return $url_sig_string;

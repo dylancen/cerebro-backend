@@ -24,9 +24,9 @@
   if ($user_website->execute_get()){
     $result = $user_website->get_results();
     while($r = $result->fetch_assoc()) {
-      $rows['user_websites'][] = $r;
+      $rows['user_websites'] = json_encode($r);
     }
-    send_results(json_encode($rows));
+    send_results($rows);
   }else{
     send_error_response($user_website->error());
   }
@@ -49,6 +49,8 @@
     http_response_code(200);
     header('Content-Type: application/json');
     header("Cache-Control: no-cache, must-revalidate");
-    echo $results;
+    $token = generate_encoded_auth_token($results);
+    $results['auth_token'] = $token;
+    echo json_encode($results);
   }
 ?>
