@@ -8,6 +8,7 @@
         $string = $string.$value;
       }
     }
+    //echo "PHP token: $string\n";
     $signature = sign_auth_token($string);//binary signature
     $url_sig_string = urlencode(base64_encode($signature));//converting to url
     return $url_sig_string;
@@ -18,9 +19,11 @@
     $string = '';
     foreach($args as $key => $value){ //building argument concatenation
       if ($key != 'auth_token') {
+        //echo "\n\"$value\"\n";
         $string = $string.$value;
       }
     }
+    //echo "\n\"$string\"\n";
     return verify_auth_token($string, $bin_token);
   }
 ?>

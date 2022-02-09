@@ -16,14 +16,23 @@
         $error = $this->database->errno . ' ' . $this->database->error . "\n";
         die($error);
       }
+      return true;
     }
 
     function execute(){
-      $this->query->execute();
+      return $this->query->execute();
     }
 
-    function get_query(){
-      return $this->query;
+    function get_results(){
+      return $this->query->get_result();
+    }
+
+    function error(){
+      return $this->query->error;
+    }
+
+    function connect_error(){
+      return $this->database->connect_error;
     }
   } 
 ?>

@@ -16,35 +16,33 @@
     die();
   }
 
-  if (isset($_POST['public_key'])){
-    $pkey = $_POST['public_key'];
+  if (isset($_POST['password_hash'])){
+    $phash = $_POST['password_hash'];
   }else{
-    send_error_response('pwd not set');
-    die();
-  }
-
-  if (isset($_POST['security_question'])){
-    $secq = $_POST['security_question'];
-  }else{
-    send_error_response('Sec quest not set');
-    die();
-  }
-
-  if (isset($_POST['security_answer'])){
-    $seca = $_POST['security_answer'];
-  }else{
-    send_error_response('Sec ans not set');
+    send_error_response('pwd hash not set');
     die();
   }
 
   $user = new User();
-  $user->prepare_insert_query();
-  $user->bind_insert_params($username, $pkey, $secq, $seca);
-  if ($user->execute_insert()){
-    send_ok_response("Row added successfully");
+  $user->prepare_get_query();
+  $user->bind_get_params($username);
+  if($user->execute_get()){
+    $result = $user->get_results();
+    if($result->num_rows > 0){
+      $user_entry = $result->fetch_assoc();
+      if($phash == $user_entry["password_hash"]){
+        send_ok_response($user_entry["user_id"]);
+      }else{
+        send_error_response("Invalid username or password");
+      }
+    }else{
+      send_error_response("Invalid username or password");
+    }
   }else{
-    send_error_response($user->error());
+    send_error_response("Unable execute get statement");
   }
+  
+
 
   function send_error_response($message){
     http_response_code(400);
@@ -55,11 +53,11 @@
     echo json_encode($responseMap); 
   }
 
-  function send_ok_response($message){
+  function send_ok_response($user_id){
     http_response_code(200);
     header('Content-Type: application/json');
     header("Cache-Control: no-cache, must-revalidate");
-    $responseMap = array('message' => $message);
+    $responseMap = array('user_id' => $user_id);
     $responseMap['auth_token'] = generate_encoded_auth_token($responseMap);
     echo json_encode($responseMap); 
   }
