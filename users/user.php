@@ -2,7 +2,7 @@
   require '../db.php';
   class User extends Db{
     function prepare_insert_query(){
-      $this->prepare_query('INSERT INTO Users(username, public_key_pass, security_question, security_answer) VALUES (?,?,?,?)');
+      $this->prepare_query('INSERT INTO Users(username, password_hash, security_question, security_answer) VALUES (?,?,?,?)');
     }
 
     function bind_insert_params($username, $pkpass, $secquest, $secans){
@@ -17,5 +17,18 @@
         return false;
       }
     }
+    
+    function prepare_get_query(){
+      return $this->prepare_query('SELECT * FROM Users WHERE username=?');
+    }
+
+    function bind_get_params($username){
+      return $this->query->bind_param('s', $username);
+    }
+
+    function execute_get(){
+      return $this->execute();
+    }
+
   }
 ?>
