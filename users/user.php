@@ -30,5 +30,16 @@
       return $this->execute();
     }
 
+    function prepare_update_query(){
+      return $this->prepare_query('UPDATE Users SET password_hash=? WHERE user_id=?');
+    }
+
+    function bind_update_params($phash, $user_id){
+      return $this->query->bind_param('si', $phash, $user_id);
+    }
+
+    function execute_update(){
+      return $this->execute();
+    }
   }
 ?>

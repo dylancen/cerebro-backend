@@ -2,40 +2,24 @@
   include '../auth.php';
   include 'user_website.php';
   $_POST = json_decode(file_get_contents('php://input'), true);
-  //echo "\n";
-  //echo var_dump($_POST);
-  //echo "\n"; 
+
   if (!verify_encoded_auth_token($_POST['auth_token'], $_POST)){
     send_error_response('Unauthorized request');
     die();
   }
 
-  if (isset($_POST['user_id'])){
-    $uid = $_POST['user_id'];
+  if (isset($_POST['credential_id'])){
+    $credential_id = $_POST['credential_id'];
   }else{
-    send_error_response('User id not passed');
-    die();
-  }
-
-  if (isset($_POST['website_id'])){
-    $wid = $_POST['website_id'];
-  }else{
-    send_error_response('Website id not passed');
-    die();
-  }
-
-  if (isset($_POST['user_website_credentials'])){
-    $user_creds = $_POST['user_website_credentials'];
-  }else{
-    send_error_response('No credentials passed');
+    send_error_response('Credential id not passed');
     die();
   }
 
   $user_website = new User_Website();
-  $user_website->prepare_insert_query();
-  $user_website->bind_insert_params($uid, $wid, $user_creds);
-  if ($user_website->execute_insert()){
-    send_ok_response("Website added successfully");
+  $user_website->prepare_delete_query();
+  $user_website->bind_delete_params($credential_id);
+  if ($user_website->execute_delete()){
+    send_ok_response("Deleted entry successfully");
   }else{
     send_error_response($user_website->error());
   }

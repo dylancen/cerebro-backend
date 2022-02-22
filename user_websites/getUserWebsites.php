@@ -23,10 +23,11 @@
 
   if ($user_website->execute_get()){
     $result = $user_website->get_results();
+    $rows = array();
     while($r = $result->fetch_assoc()) {
-      $rows['user_websites'] = json_encode($r);
+      array_push($rows, json_encode($r));
     }
-    send_results($rows);
+    send_results(array('user_websites' => json_encode($rows)));
   }else{
     send_error_response($user_website->error());
   }

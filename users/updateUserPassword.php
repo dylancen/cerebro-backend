@@ -1,41 +1,32 @@
 <?php
   include '../auth.php';
-  include 'user_website.php';
+  include 'user.php';
   $_POST = json_decode(file_get_contents('php://input'), true);
-  //echo "\n";
-  //echo var_dump($_POST);
-  //echo "\n"; 
+
   if (!verify_encoded_auth_token($_POST['auth_token'], $_POST)){
     send_error_response('Unauthorized request');
     die();
   }
 
   if (isset($_POST['user_id'])){
-    $uid = $_POST['user_id'];
+    $user_id = $_POST['user_id'];
   }else{
     send_error_response('User id not passed');
     die();
   }
 
-  if (isset($_POST['website_id'])){
-    $wid = $_POST['website_id'];
+  if (isset($_POST['password_hash'])){
+    $phash = $_POST['password_hash'];
   }else{
-    send_error_response('Website id not passed');
+    send_error_response('New new password not passed');
     die();
   }
 
-  if (isset($_POST['user_website_credentials'])){
-    $user_creds = $_POST['user_website_credentials'];
-  }else{
-    send_error_response('No credentials passed');
-    die();
-  }
-
-  $user_website = new User_Website();
-  $user_website->prepare_insert_query();
-  $user_website->bind_insert_params($uid, $wid, $user_creds);
-  if ($user_website->execute_insert()){
-    send_ok_response("Website added successfully");
+  $user = new User();
+  $user->prepare_update_query();
+  $user->bind_update_params($phash, $user_id);
+  if ($user->execute_update()){
+    send_ok_response("User password updated successfully");
   }else{
     send_error_response($user_website->error());
   }
