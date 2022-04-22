@@ -37,11 +37,18 @@
     die();
   }
 
+  if (isset($_POST['encrypted_password'])){
+    $enc = $_POST['encrypted_password'];
+  }else{
+    send_error_response('Encr password not set');
+    die();
+  }
+
   $user = new User();
   $user->prepare_insert_query();
-  $user->bind_insert_params($username, $pkey, $secq, $seca);
+  $user->bind_insert_params($username, $pkey, $secq, $seca, $enc);
   if ($user->execute_insert()){
-    send_ok_response("Row added successfully");
+    send_ok_response("User added successfully");
   }else{
     send_error_response($user->error());
   }

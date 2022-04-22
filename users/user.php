@@ -2,11 +2,11 @@
   require '../db.php';
   class User extends Db{
     function prepare_insert_query(){
-      $this->prepare_query('INSERT INTO Users(username, password_hash, security_question, security_answer) VALUES (?,?,?,?)');
+      $this->prepare_query('INSERT INTO Users(username, password_hash, security_question, security_answer, encrypted_password) VALUES (?,?,?,?,?)');
     }
 
-    function bind_insert_params($username, $pkpass, $secquest, $secans){
-      $this->query->bind_param('ssss', $username, $pkpass, $secquest, $secans);
+    function bind_insert_params($username, $pkpass, $secquest, $secans, $enc){
+      $this->query->bind_param('sssss', $username, $pkpass, $secquest, $secans, $enc);
     }
 
     function execute_insert(){
@@ -31,11 +31,11 @@
     }
 
     function prepare_update_query(){
-      return $this->prepare_query('UPDATE Users SET password_hash=? WHERE user_id=?');
+      return $this->prepare_query('UPDATE Users SET password_hash=?, encrypted_password=? WHERE user_id=?');
     }
 
-    function bind_update_params($phash, $user_id){
-      return $this->query->bind_param('si', $phash, $user_id);
+    function bind_update_params($phash, $user_id, $penc){
+      return $this->query->bind_param('ssi', $phash, $penc, $user_id);
     }
 
     function execute_update(){

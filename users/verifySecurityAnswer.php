@@ -31,7 +31,7 @@
     if($result->num_rows > 0){
       $user_entry = $result->fetch_assoc();
       if($sahash == $user_entry["security_answer"]){
-        send_ok_response($user_entry["user_id"]);
+        send_ok_response($user_entry["user_id"], $user_entry["encrypted_password"]);
       }else{
         send_error_response("Invalid answer");
       }
@@ -53,11 +53,11 @@
     echo json_encode($responseMap); 
   }
 
-  function send_ok_response($user_id){
+  function send_ok_response($user_id, $encp){
     http_response_code(200);
     header('Content-Type: application/json');
     header("Cache-Control: no-cache, must-revalidate");
-    $responseMap = array('user_id' => $user_id);
+    $responseMap = array('user_id' => $user_id, 'encrypted_password' => $encp);
     $responseMap['auth_token'] = generate_encoded_auth_token($responseMap);
     echo json_encode($responseMap); 
   }

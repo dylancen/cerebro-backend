@@ -22,9 +22,16 @@
     die();
   }
 
+  if (isset($_POST['encrypted_password'])){
+    $penc = $_POST['encrypted_password'];
+  }else{
+    send_error_response('Password encryption not passed');
+    die();
+  }
+
   $user = new User();
   $user->prepare_update_query();
-  $user->bind_update_params($phash, $user_id);
+  $user->bind_update_params($phash, $user_id, $penc);
   if ($user->execute_update()){
     send_ok_response("User password updated successfully");
   }else{
